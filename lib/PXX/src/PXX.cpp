@@ -39,15 +39,40 @@ const unsigned int CRCTable[]=
     0x7bc7,0x6a4e,0x58d5,0x495c,0x3de3,0x2c6a,0x1ef1,0x0f78
 };
 
-PXX_Class::PXX_Class()
-    : serial(2,2)
+void USART_Init(long baud)
 {
+    int _baud = (16000000 / (2 * baud)) - 1;
 
+    UBRR0 = 0;
+
+    /* Setting the XCKn port pin as output, enables master mode. */
+    //XCKn_DDR |= (1<<XCKn);
+    //DDRD = DDRD | B00000010;
+
+    //Double data rate
+    //UCSR0A = (1<<U2X0);
+
+    /* Set MSPI mode of operation and SPI data mode 0. */
+    UCSR0C = (1<<UMSEL01)|(1<<UMSEL00)|(1<<UDORD0);
+
+    /* Enable receiver and transmitter. */
+    UCSR0B = (1<<TXEN0);
+    /* Set baud rate. */
+    /* IMPORTANT: The Baud Rate must be set after the transmitter is enabled */
+    UBRR0 = _baud;
+}
+
+void USART_Send(uint8_t data) {
+    /* Put data into buffer, sends the data */
+    UDR0 = data;
+
+    //Wait for the buffer to be empty
+    while ( !( UCSR0A & (1<<UDRE0)) );
 }
 
 void PXX_Class::begin()
 {
-    serial.begin(125000);
+    USART_Init(125000);
 }
 
 void PXX_Class::crc(uint8_t data)
@@ -135,7 +160,7 @@ void PXX_Class::putPcmHead()
     putPcmPart(0);
 }
 
-void PXX_Class::preparePulses(int16_t channels[16], int channelCount) {
+void PXX_Class::preparePulses(int16_t channels[16]) {
     uint16_t chan=0, chan_low=0;
 
     length = 0;
@@ -153,30 +178,24 @@ void PXX_Class::preparePulses(int16_t channels[16], int channelCount) {
 
 
     // Rx Number
-    putPcmByte(1);
+    putPcmByte(16);
 
     // FLAG1 - Fail Safe Mode, nothing currently set, maybe want to do this
-    // 1 means all listening Rx set your Rx number to 1
-    putPcmByte(1);
+    putPcmByte(0);
 
     // FLAG2
     putPcmByte(0);
 
     // PPM
-    int sendUpperChannels = channelCount;
     for (int i=0; i<8; i++)
     {
-        if (i < sendUpperChannels)
+        if (sendUpperChannels)
         {
             chan = limit(2049, (channels[8+i] * 512 / 682) + 3072, 4094);
         }
-        else if (i < channelCount)
-        {
-            chan = limit(1, (channels[i] * 512 / 682) + 1024, 2046);
-        }
         else
         {
-            chan = 1024;
+            chan = limit(1, (channels[i] * 512 / 682) + 1024, 2046);
         }
 
         if (i & 1)
@@ -203,10 +222,16 @@ void PXX_Class::preparePulses(int16_t channels[16], int channelCount) {
     putPcmFlush();
 }
 
-void PXX_Class::send(int16_t channels[16], int channelCount)
+void PXX_Class::send(int16_t channels[16])
 {
-    preparePulses(channels, channelCount);
-    serial.write((uint8_t*)pulses, sizeof(pulses));
+    preparePulses(channels);
+
+    for(int i = 0; i < length; i++)
+    {
+        USART_Send(pulses[i]);
+    }
+    sendUpperChannels = false;
+    //sendUpperChannels = !sendUpperChannels;
 }
 
 uint16_t PXX_Class::limit(uint16_t low, uint16_t val, uint16_t high) {

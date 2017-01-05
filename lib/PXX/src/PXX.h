@@ -1,12 +1,10 @@
 #include "Arduino.h"
-#include "SoftwareSerial.h"
 
 class PXX_Class
 {
     public:
-        PXX_Class();
         void begin();
-        void send(int16_t channels[16], int channelCount);
+        void send(int16_t channels[16]);
 
     private:
         uint8_t  pulses[64];
@@ -15,7 +13,7 @@ class PXX_Class
         uint32_t pcmOnesCount;
         uint16_t serialByte;
         uint16_t serialBitCount;
-        SoftwareSerial serial;
+        bool sendUpperChannels;
 
         void crc(uint8_t data);
         void putPcmSerialBit(uint8_t bit);
@@ -25,7 +23,7 @@ class PXX_Class
         void putPcmByte(uint8_t byte);
         void putPcmHead();
         uint16_t limit(uint16_t low,uint16_t val, uint16_t high);
-        void preparePulses(int16_t channels[16], int channelCount);
+        void preparePulses(int16_t channels[8]);
 };
 
 extern PXX_Class PXX;

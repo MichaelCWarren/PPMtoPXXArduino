@@ -4,26 +4,22 @@
 
 void setup()
 {
-    Serial.begin(115200);
-
+    //CPPM.begin();
     PXX.begin();
-    CPPM.begin();
 }
-
 
 void loop()
 {
-    CPPM.cycle();
-    if (CPPM.synchronized())
-    {
-        int16_t channels[16] = {0,0,0,0,0,0,0,1000,1000,1000,1000,1000,1000,1000,1000,1000};
-        for(int i = 0; i < 7; i++)
-        {
-            channels[i] = CPPM.read_us(i);
-        }
+    //CPPM.cycle();
+    //if (CPPM.synchronized())
+    //{
+        int16_t channels[16] = {2000,2000,2000,2000,2000,2000,2000,1000,1000,1000,1000,1000,1000,1000,1000,1000};
+        //for(int i = 1; i < 7; i++)
+        //{
+        //    channels[i] = CPPM.read_us(i);
+        //}
 
-        PXX.send(channels, 16);
-    }
-
+        PXX.send(channels);
+    //}
     delay(9);
 }
