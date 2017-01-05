@@ -11,6 +11,7 @@
 #define PXX_LOWER_LOW                       1
 #define PXX_LOWER_HIGH                      2046
 
+/*
 const unsigned int CRCTable[]=
 {
     0x0000,0x1189,0x2312,0x329b,0x4624,0x57ad,0x6536,0x74bf,
@@ -47,6 +48,29 @@ const unsigned int CRCTable[]=
     0x7bc7,0x6a4e,0x58d5,0x495c,0x3de3,0x2c6a,0x1ef1,0x0f78
 };
 
+void PXX_Class::crc(uint8_t data)
+{
+    pcmCrc = (pcmCrc<<8) ^ (CRCTable[((pcmCrc>>8)^data) & 0xFF]);
+}
+*/
+
+const uint16_t CRC_Short[] =
+{
+   0x0000, 0x1189, 0x2312, 0x329B, 0x4624, 0x57AD, 0x6536, 0x74BF,
+   0x8C48, 0x9DC1, 0xAF5A, 0xBED3, 0xCA6C, 0xDBE5, 0xE97E, 0xF8F7
+};
+
+uint16_t CRCTable(uint8_t val)
+{
+	return CRC_Short[val&0x0F] ^ (0x1081 * (val>>4));
+}
+
+
+void PXX_Class::crc( uint8_t data )
+{
+    pcmCrc=(pcmCrc<<8) ^ CRCTable((pcmCrc>>8)^data) ;
+}
+
 void USART_Init(long baud)
 {
     int _baud = (16000000 / (2 * baud)) - 1;
@@ -78,11 +102,6 @@ void USART_Send(uint8_t data) {
 void PXX_Class::begin()
 {
     USART_Init(125000);
-}
-
-void PXX_Class::crc(uint8_t data)
-{
-    pcmCrc = (pcmCrc<<8) ^ (CRCTable[((pcmCrc>>8)^data) & 0xFF]);
 }
 
 void PXX_Class::putPcmSerialBit(uint8_t bit)
