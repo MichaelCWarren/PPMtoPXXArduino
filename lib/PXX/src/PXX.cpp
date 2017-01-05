@@ -2,6 +2,14 @@
 #include "PXX.h"
 
 #define PPM_CENTER                          1500
+#define PPM_LOW                             817
+#define PPM_HIGH                            2182
+#define PPM_HIGH_ADJUSTED                   PPM_HIGH - PPM_LOW
+#define PXX_CHANNEL_WIDTH                   2048
+#define PXX_UPPER_LOW                       2049
+#define PXX_UPPER_HIGH                      4094
+#define PXX_LOWER_LOW                       1
+#define PXX_LOWER_HIGH                      2046
 
 const unsigned int CRCTable[]=
 {
@@ -189,14 +197,10 @@ void PXX_Class::preparePulses(int16_t channels[16]) {
     // PPM
     for (int i=0; i<8; i++)
     {
-        if (sendUpperChannels)
-        {
-            chan = limit(2049, (channels[8+i] * 512 / 682) + 3072, 4094);
-        }
-        else
-        {
-            chan = limit(1, (channels[i] * 512 / 682) + 1024, 2046);
-        }
+        int channelPPM = channels[sendUpperChannels ? 8 + i : i];
+        chan = limit(sendUpperChannels ? PXX_UPPER_LOW : PXX_LOWER_LOW,
+                     ((channelPPM - PPM_LOW) / PPM_HIGH_ADJUSTED) * PXX_CHANNEL_WIDTH,
+                     sendUpperChannels ? PXX_UPPER_HIGH : PXX_LOWER_HIGH);
 
         if (i & 1)
         {
@@ -218,7 +222,6 @@ void PXX_Class::preparePulses(int16_t channels[16]) {
 
     // Sync
     putPcmHead();
-
     putPcmFlush();
 }
 
