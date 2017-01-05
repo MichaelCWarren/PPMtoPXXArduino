@@ -1,5 +1,5 @@
-#include "Arduino.h"
-#include "PXX.h"
+#include <Arduino.h>
+#include <PXX.h>
 
 #define PPM_CENTER                          1500
 #define PPM_LOW                             817
@@ -56,9 +56,6 @@ void USART_Init(long baud)
     /* Setting the XCKn port pin as output, enables master mode. */
     //XCKn_DDR |= (1<<XCKn);
     //DDRD = DDRD | B00000010;
-
-    //Double data rate
-    //UCSR0A = (1<<U2X0);
 
     /* Set MSPI mode of operation and SPI data mode 0. */
     UCSR0C = (1<<UMSEL01)|(1<<UMSEL00)|(1<<UDORD0);
@@ -233,8 +230,8 @@ void PXX_Class::send(int16_t channels[16])
     {
         USART_Send(pulses[i]);
     }
-    sendUpperChannels = false;
-    //sendUpperChannels = !sendUpperChannels;
+
+    sendUpperChannels = !sendUpperChannels;
 }
 
 uint16_t PXX_Class::limit(uint16_t low, uint16_t val, uint16_t high) {
