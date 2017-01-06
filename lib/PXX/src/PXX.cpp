@@ -4,7 +4,7 @@
 #define PPM_CENTER                          1500
 #define PPM_LOW                             817
 #define PPM_HIGH                            2182
-#define PPM_HIGH_ADJUSTED                   PPM_HIGH - PPM_LOW
+#define PPM_HIGH_ADJUSTED                   (PPM_HIGH - PPM_LOW)
 #define PXX_CHANNEL_WIDTH                   2048
 #define PXX_UPPER_LOW                       2049
 #define PXX_UPPER_HIGH                      4094
@@ -213,11 +213,17 @@ void PXX_Class::preparePulses(int16_t channels[16]) {
     // PPM
     for (int i=0; i<8; i++)
     {
-        int channelPPM = channels[sendUpperChannels ? 8 + i : i];
-        chan = limit(sendUpperChannels ? PXX_UPPER_LOW : PXX_LOWER_LOW,
-                     ((channelPPM - PPM_LOW) / PPM_HIGH_ADJUSTED) * PXX_CHANNEL_WIDTH,
-                     sendUpperChannels ? PXX_UPPER_HIGH : PXX_LOWER_HIGH);
 
+        int channelPPM = channels[(sendUpperChannels ? (8 + i) : i)];
+        float convertedChan = ((float(channelPPM) - float(817)) / (float(2182) - float(817))) * float(2048);
+        chan = limit((sendUpperChannels ? PXX_UPPER_LOW : PXX_LOWER_LOW),
+                     convertedChan,
+                     (sendUpperChannels ? PXX_UPPER_HIGH : PXX_LOWER_HIGH));
+        /*
+        Serial.print(sendUpperChannels ? (8 + i) : i);
+        Serial.print(": ");
+        Serial.println(chan);
+        */
         if (i & 1)
         {
             putPcmByte(chan_low); // Low byte of channel

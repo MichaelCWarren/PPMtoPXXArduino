@@ -1,3 +1,6 @@
+#ifndef PXX_h
+#define PXX_h
+
 #include <Arduino.h>
 
 class PXX_Class
@@ -27,3 +30,5 @@ class PXX_Class
 };
 
 extern PXX_Class PXX;
+
+#endif
