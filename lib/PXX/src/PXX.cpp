@@ -215,15 +215,11 @@ void PXX_Class::preparePulses(int16_t channels[16]) {
     {
 
         int channelPPM = channels[(sendUpperChannels ? (8 + i) : i)];
-        float convertedChan = ((float(channelPPM) - float(817)) / (float(2182) - float(817))) * float(2048);
+        float convertedChan = ((float(channelPPM) - float(PPM_LOW)) / (float(PPM_HIGH_ADJUSTED))) * float(PXX_CHANNEL_WIDTH);
         chan = limit((sendUpperChannels ? PXX_UPPER_LOW : PXX_LOWER_LOW),
                      convertedChan,
                      (sendUpperChannels ? PXX_UPPER_HIGH : PXX_LOWER_HIGH));
-        /*
-        Serial.print(sendUpperChannels ? (8 + i) : i);
-        Serial.print(": ");
-        Serial.println(chan);
-        */
+
         if (i & 1)
         {
             putPcmByte(chan_low); // Low byte of channel
