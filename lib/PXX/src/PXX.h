@@ -7,7 +7,8 @@ class PXX_Class
 {
     public:
         void begin();
-        void send(int16_t channels[16]);
+        void send();
+        void prepare(int16_t channels[16]); 
 
     private:
         uint8_t  pulses[64];
