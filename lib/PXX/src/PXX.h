@@ -7,17 +7,16 @@ class PXX_Class
 {
     public:
         void begin();
-        void send();
-        void prepare(int16_t channels[16]); 
-
+        void send(int16_t channels[16]);
     private:
+        void sendPulses();
+        void prepareChannels(int16_t channels[16], bool sendUpperChannels); 
         uint8_t  pulses[64];
         int length = 0;
         uint16_t pcmCrc;
         uint32_t pcmOnesCount;
         uint16_t serialByte;
         uint16_t serialBitCount;
-        bool sendUpperChannels;
 
         void crc(uint8_t data);
         void putPcmSerialBit(uint8_t bit);

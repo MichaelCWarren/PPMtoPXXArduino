@@ -2,8 +2,8 @@
 #include <CPPM.h>
 #include <PXX.h>
 
-int16_t channels[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
-bool prepare = true;
+int16_t channels[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+bool doCPP = true;
 
 void setup()
 {
@@ -11,26 +11,27 @@ void setup()
     PXX.begin();
 }
 
-void loop() {
-    if(prepare)
+void loop()
+{
+    if (doCPP)
     {
         CPPM.cycle();
         if (CPPM.synchronized())
         {
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 channels[i] = CPPM.read_us(i);
             }
 
-            PXX.prepare(channels);
+            channels[8] = ((analogRead(0) > 200 ? 1 : 0) * 1000) + 1000;
         }
     }
     else
     {
-        PXX.send();
+        PXX.send(channels);
     }
 
-    prepare = !prepare;
+    doCPP = !doCPP;
 
     delay(2);
 }
