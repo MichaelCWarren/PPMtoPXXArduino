@@ -24,6 +24,9 @@ void loop()
             }
 
             channels[8] = ((analogRead(0) > 200 ? 1 : 0) * 1000) + 1000;
+            channels[9] = ((analogRead(1) > 200 ? 1 : 0) * 1000) + 1000;
+            channels[10] = ((analogRead(2) > 200 ? 1 : 0) * 1000) + 1000;
+            channels[11] = ((analogRead(3) > 200 ? 1 : 0) * 1000) + 1000;
         }
     }
     else

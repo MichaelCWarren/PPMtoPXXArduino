@@ -1,0 +1,60 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/include",
+                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/src",
+                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX/src",
+                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/CPPM/src",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/include",
+                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/src",
+                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX/src",
+                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/CPPM/src",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60105",
+                "ARDUINO_AVR_NANO",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega328P__",
+                ""
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compilerPath": "/Users/michaelwarren/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerArgs": [
+                "-mmcu=atmega328p",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
