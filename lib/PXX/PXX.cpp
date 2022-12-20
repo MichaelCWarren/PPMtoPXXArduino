@@ -141,7 +141,7 @@ void PXX_Class::putPcmHead()
     putPcmPart(0);
 }
 
-void PXX_Class::prepareChannels(int16_t channels[16], bool sendUpperChannels)
+void PXX_Class::prepareChannels(int16_t channels[16], bool sendUpperChannels, bool bind, bool failsafe)
 {
     uint16_t chan = 0, chan_low = 0;
 
@@ -161,22 +161,47 @@ void PXX_Class::prepareChannels(int16_t channels[16], bool sendUpperChannels)
     // Rx Number
     putPcmByte(16);
 
+    // Flags
+    // 00000000
+    //        ^ Bind
+    //    ^ Failsafe
+    //   ^ Range Check?
+    //  ^ Subtype 0 - D16, 1 - D8
+
+    uint8_t flags = (bind ? 1 : 0) | ((failsafe ? 1 : 0) << 4);
     // FLAG1 - Fail Safe Mode, nothing currently set, maybe want to do this
-    putPcmByte(0);
+    putPcmByte(flags);
 
     // FLAG2
     putPcmByte(0);
 
+    int CHAN_MIN = 1;
+    int CHAN_MAX = PXX_CHANNEL_WIDTH - 2;
+
     // PPM
     for (int i = 0; i < 8; i++)
     {
-
         int channelPPM = channels[(sendUpperChannels ? (8 + i) : i)];
-        float convertedChan = ((float(channelPPM) - float(PPM_LOW)) / (float(PPM_HIGH_ADJUSTED))) * float(PXX_CHANNEL_WIDTH);
-        chan = limit(1,
-                     convertedChan,
-                     PXX_CHANNEL_WIDTH - 1) +
-               (sendUpperChannels ? 2048 : 0);
+        if (failsafe)
+        {
+            if (channelPPM == PXX_FAILSAFE_HOLD)
+            {
+                channelPPM = PXX_CHANNEL_WIDTH - 1; // Max value
+            }
+            else if (channelPPM == PXX_FAILSAFE_NO_PULSE)
+            {
+                channelPPM = 0;
+            }
+            else
+            {
+                channelPPM = 1500;
+            }
+        }
+        else
+        {
+            float convertedChan = ((float(channelPPM) - float(PPM_LOW)) / (float(PPM_HIGH_ADJUSTED))) * float(PXX_CHANNEL_WIDTH);
+            chan = limit(CHAN_MIN, convertedChan, CHAN_MAX) + (sendUpperChannels ? PXX_CHANNEL_WIDTH : 0);
+        }
 
         if (i & 1)
         {
@@ -204,11 +229,12 @@ void PXX_Class::prepareChannels(int16_t channels[16], bool sendUpperChannels)
     putPcmFlush();
 }
 
-void PXX_Class::send(int16_t channels[16])
+void PXX_Class::send(int16_t channels[16], bool bind, bool failsafe)
 {
-    prepareChannels(channels, false);
+
+    prepareChannels(channels, false, bind, failsafe);
     sendPulses();
-    prepareChannels(channels, true);
+    prepareChannels(channels, true, bind, failsafe);
     sendPulses();
 }
 
