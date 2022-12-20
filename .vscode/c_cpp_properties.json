@@ -10,7 +10,7 @@
             "includePath": [
                 "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/include",
                 "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/src",
-                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX/src",
+                "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX",
                 "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/CPPM/src",
                 "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
@@ -26,7 +26,7 @@
                 "path": [
                     "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/include",
                     "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/src",
-                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX/src",
+                    "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/PXX",
                     "/Users/michaelwarren/Workspaces/personal/PPMtoPXXArduino/lib/CPPM/src",
                     "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/Users/michaelwarren/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
